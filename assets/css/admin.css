@@ -1,0 +1,839 @@
+/* ==========================================================================
+   Área Administrativa - Estilo Meta (Colores sólidos, claros y blanco puro)
+   ========================================================================== */
+
+.admin-shell {
+  --meta-bg: #ffffff;
+  --meta-canvas: #f0f2f5;
+  --meta-ink: #050505;
+  --meta-secondary: #65676b;
+  --meta-border: #e4e6eb;
+  --meta-border-input: #ccd0d5;
+  --meta-hover: #f0f2f5;
+  --meta-blue: #0866ff;
+  --meta-blue-hover: #075ce0;
+  --meta-blue-light: #e7f3ff;
+  --meta-blue-border: #d0e4ff;
+  --meta-danger: #e41e3f;
+  --meta-danger-bg: #fde8e8;
+  --meta-success: #31a24c;
+  --meta-radius: 10px;
+  --meta-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  color: var(--meta-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  position: relative;
+}
+
+body.admin-drawer-open {
+  overflow: hidden !important;
+}
+
+/* ==========================================================================
+   Barra Superior Minimalista (Solo Menú Hamburguesa e Indicador de Vista)
+   ========================================================================== */
+
+.admin-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--meta-bg);
+  border: 1px solid var(--meta-border);
+  border-radius: var(--meta-radius);
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  box-shadow: var(--meta-shadow);
+}
+
+/* Botón Hamburguesa Estilo Meta */
+.admin-hamburger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid var(--meta-border-input);
+  color: var(--meta-ink);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.admin-hamburger-btn:hover {
+  background: var(--meta-hover);
+  border-color: #bec3c9;
+}
+
+.admin-hamburger-btn:focus-visible {
+  outline: 2px solid var(--meta-blue);
+  outline-offset: 2px;
+}
+
+/* Ícono de tres líneas */
+.admin-hamburger-icon {
+  width: 18px;
+  height: 13px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.admin-hamburger-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: var(--meta-ink);
+  border-radius: 2px;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+}
+
+.admin-hamburger-btn.is-active .admin-hamburger-icon span:nth-child(1) {
+  transform: translateY(5.5px) rotate(45deg);
+}
+
+.admin-hamburger-btn.is-active .admin-hamburger-icon span:nth-child(2) {
+  opacity: 0;
+}
+
+.admin-hamburger-btn.is-active .admin-hamburger-icon span:nth-child(3) {
+  transform: translateY(-5.5px) rotate(-45deg);
+}
+
+/* Indicador de sección activa en la barra superior */
+.admin-top-view-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--meta-ink);
+  background: var(--meta-hover);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--meta-border);
+}
+
+.admin-top-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--meta-blue);
+  box-shadow: 0 0 0 2px rgba(8, 102, 255, 0.2);
+}
+
+/* ==========================================================================
+   Overlay y Cajón Lateral (Drawer Blanco Sólido Tipo Meta)
+   ========================================================================== */
+
+.admin-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.admin-drawer-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.admin-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(340px, 86vw);
+  background: var(--meta-bg);
+  color: var(--meta-ink);
+  border-right: 1px solid var(--meta-border);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+  font-family: inherit;
+}
+
+.admin-drawer.is-open {
+  transform: translateX(0);
+}
+
+/* Encabezado del menú */
+.admin-drawer-header {
+  padding: 16px 20px;
+  background: var(--meta-bg);
+  border-bottom: 1px solid var(--meta-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-drawer-brand-icon {
+  font-size: 1.5rem;
+}
+
+.admin-drawer-brand-title {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: var(--meta-ink);
+  letter-spacing: -0.02em;
+}
+
+.admin-drawer-brand-sub {
+  margin: 2px 0 0;
+  font-size: 0.74rem;
+  color: var(--meta-secondary);
+  font-weight: 600;
+}
+
+/* Botón cerrar circular tipo Meta */
+.admin-drawer-close-btn {
+  background: var(--meta-hover);
+  border: none;
+  color: var(--meta-secondary);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-drawer-close-btn:hover {
+  background: var(--meta-border);
+  color: var(--meta-ink);
+}
+
+/* Cuerpo del menú */
+.admin-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-drawer-body::-webkit-scrollbar {
+  width: 6px;
+}
+.admin-drawer-body::-webkit-scrollbar-thumb {
+  background: var(--meta-border);
+  border-radius: 4px;
+}
+
+.admin-drawer-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-drawer-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--meta-secondary);
+  padding: 0 10px 8px;
+}
+
+.admin-drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Elementos de navegación y acciones */
+.admin-drawer-tab,
+.admin-drawer-action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--meta-ink);
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  position: relative;
+}
+
+.admin-drawer-tab:hover,
+.admin-drawer-action:hover {
+  background: var(--meta-hover);
+}
+
+/* Estado activo tipo Meta: Fondo azul suave con texto e icono azul */
+.admin-drawer-tab.is-active {
+  background: var(--meta-blue-light);
+  color: var(--meta-blue);
+  border-color: var(--meta-blue-border);
+}
+
+.admin-drawer-tab-icon {
+  font-size: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--meta-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-drawer-tab.is-active .admin-drawer-tab-icon {
+  background: var(--meta-blue);
+  color: #ffffff;
+}
+
+.admin-drawer-tab-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-drawer-tab-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.admin-drawer-tab.is-active .admin-drawer-tab-name {
+  font-weight: 700;
+}
+
+.admin-drawer-tab-sub {
+  font-size: 0.74rem;
+  color: var(--meta-secondary);
+  margin-top: 3px;
+}
+
+.admin-drawer-tab.is-active .admin-drawer-tab-sub {
+  color: var(--meta-blue);
+  opacity: 0.85;
+}
+
+/* Insignias de conteo */
+.admin-drawer-pill {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  background: var(--meta-border);
+  color: var(--meta-ink);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.admin-drawer-pill.danger {
+  background: var(--meta-danger);
+  color: #ffffff;
+}
+
+/* Acción de Peligro / Cerrar Sesión */
+.admin-drawer-danger {
+  color: var(--meta-danger);
+}
+
+.admin-drawer-danger .admin-drawer-tab-icon {
+  background: var(--meta-danger-bg);
+  color: var(--meta-danger);
+}
+
+.admin-drawer-danger:hover {
+  background: var(--meta-danger-bg);
+}
+
+.admin-drawer-danger .admin-drawer-tab-sub {
+  color: #b91c1c;
+}
+
+/* Pie del menú lateral */
+.admin-drawer-footer {
+  padding: 14px 18px;
+  background: var(--meta-bg);
+  border-top: 1px solid var(--meta-border);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.admin-drawer-user-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--meta-secondary);
+}
+
+.admin-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--meta-success);
+  box-shadow: 0 0 0 2px rgba(49, 162, 76, 0.2);
+}
+
+.admin-drawer-version {
+  font-size: 0.72rem;
+  color: #8a8d91;
+}
+
+/* ==========================================================================
+   Superficies y Métricas del Panel (Colores Sólidos Claros Tipo Meta)
+   ========================================================================== */
+
+.admin-panel[hidden] {
+  display: none !important;
+}
+
+.admin-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.admin-metrics-secondary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 720px;
+  margin: 20px 0;
+}
+
+.admin-metric,
+.admin-surface {
+  background: var(--meta-bg);
+  border: 1px solid var(--meta-border);
+  border-radius: var(--meta-radius);
+  box-shadow: var(--meta-shadow);
+}
+
+.admin-metric {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-metric span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--meta-secondary);
+}
+
+.admin-metric strong {
+  font-size: 2.1rem;
+  letter-spacing: -0.04em;
+  color: var(--meta-ink);
+  font-weight: 800;
+}
+
+.admin-metric small {
+  font-size: 0.75rem;
+  color: #8a8d91;
+}
+
+.admin-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.admin-surface {
+  padding: 22px;
+  min-width: 0;
+}
+
+.admin-surface h2 {
+  font-size: 1.15rem;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+  color: var(--meta-ink);
+  font-weight: 700;
+}
+
+.admin-surface > p,
+.admin-section-heading p {
+  color: var(--meta-secondary);
+  margin: 0;
+  line-height: 1.45;
+  font-size: 0.88rem;
+}
+
+.admin-alert-list,
+.admin-ranking {
+  margin-top: 18px;
+}
+
+.admin-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--meta-border);
+  font-size: 0.9rem;
+}
+
+.admin-list-row:last-child {
+  border-bottom: 0;
+}
+
+.admin-list-row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--meta-ink);
+}
+
+.admin-list-row strong {
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.admin-pill {
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
+.admin-pill.danger {
+  background: var(--meta-danger-bg);
+  color: var(--meta-danger);
+  font-weight: 700;
+}
+
+.admin-pill.warning {
+  background: #fef3c7;
+  color: #b45309;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Control de Inventario y Tabla Tipo Meta
+   ========================================================================== */
+
+.admin-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.admin-count {
+  border-radius: 20px;
+  background: var(--meta-hover);
+  border: 1px solid var(--meta-border);
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  color: var(--meta-secondary);
+  font-weight: 700;
+}
+
+.admin-toolbar {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--meta-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.admin-field input,
+.admin-field select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--meta-border-input);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #ffffff;
+  color: var(--meta-ink);
+  font: inherit;
+  font-size: 0.92rem;
+  transition: border-color 0.15s ease;
+}
+
+.admin-field input:focus,
+.admin-field select:focus {
+  outline: none;
+  border-color: var(--meta-blue);
+  box-shadow: 0 0 0 3px rgba(8, 102, 255, 0.18);
+}
+
+.admin-table-scroll-hint {
+  display: none;
+  background: var(--meta-hover);
+  border: 1px dashed var(--meta-border-input);
+  border-radius: 6px;
+  padding: 7px 12px;
+  margin-bottom: 10px;
+  font-size: 0.78rem;
+  color: var(--meta-secondary);
+  font-weight: 600;
+  text-align: center;
+}
+
+.admin-table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--meta-border);
+  border-radius: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-shell .admin-table {
+  min-width: 780px;
+  margin: 0;
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+.admin-shell .admin-table th {
+  background: var(--meta-hover);
+  color: var(--meta-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--meta-border);
+  text-align: left;
+  font-weight: 700;
+}
+
+.admin-shell .admin-table td {
+  padding: 13px 14px;
+  color: var(--meta-ink);
+  font-size: 0.86rem;
+  border-bottom: 1px solid var(--meta-border);
+}
+
+.admin-shell .admin-table tbody tr:hover {
+  background: #f7f8fa;
+}
+
+.admin-stock-zero {
+  color: var(--meta-danger) !important;
+  font-weight: 700;
+}
+
+.admin-stock-low {
+  color: #d97706 !important;
+  font-weight: 700;
+}
+
+.admin-stock-ok {
+  color: var(--meta-success) !important;
+  font-weight: 700;
+}
+
+.admin-actions {
+  white-space: nowrap;
+}
+
+/* Botones de reposición (+5, +10) */
+.admin-btn {
+  padding: 8px 14px;
+  background: #ffffff;
+  color: var(--meta-ink);
+  border: 1px solid var(--meta-border-input);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.86rem;
+  transition: all 0.15s ease;
+}
+
+.admin-btn:hover:not(:disabled) {
+  background: var(--meta-hover);
+}
+
+.admin-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.admin-add {
+  padding: 5px 10px;
+  margin-right: 5px;
+  background: var(--meta-hover);
+  color: var(--meta-blue);
+  border: 1px solid var(--meta-border);
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.admin-add:hover:not(:disabled) {
+  background: var(--meta-blue-light);
+  border-color: var(--meta-blue);
+}
+
+.admin-table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  color: var(--meta-secondary);
+  font-size: 0.85rem;
+}
+
+.admin-table-footer > div {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-empty {
+  color: var(--meta-secondary);
+  font-size: 0.9rem;
+}
+
+.admin-empty-cell {
+  text-align: center !important;
+  color: var(--meta-secondary) !important;
+  padding: 30px !important;
+}
+
+.admin-notice {
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--meta-hover);
+  border: 1px solid var(--meta-border);
+  color: var(--meta-secondary) !important;
+  margin-top: 20px !important;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Responsive: Adaptación a Tablets y Teléfonos
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .admin-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-toolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .admin-toolbar .admin-field:first-child {
+    grid-column: 1 / -1;
+  }
+  .admin-table-scroll-hint {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-top-bar {
+    padding: 10px 14px;
+  }
+
+  .admin-drawer {
+    width: min(320px, 86vw);
+  }
+}
+
+@media (max-width: 540px) {
+  .admin-top-bar {
+    padding: 8px 12px;
+  }
+
+  .admin-top-view-info {
+    font-size: 0.82rem;
+    padding: 5px 10px;
+  }
+
+  .admin-metrics {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .admin-metric {
+    padding: 14px 16px;
+  }
+
+  .admin-metric strong {
+    font-size: 1.7rem;
+  }
+
+  .admin-surface {
+    padding: 16px;
+  }
+
+  .admin-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-table-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .admin-table-footer > div {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .admin-table-footer .admin-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .admin-drawer {
+    width: min(295px, 88vw);
+  }
+
+  .admin-drawer-body {
+    padding: 14px 8px;
+  }
+
+  .admin-drawer-tab,
+  .admin-drawer-action {
+    padding: 9px 10px;
+  }
+}

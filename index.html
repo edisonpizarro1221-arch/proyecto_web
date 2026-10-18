@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinelacces - Control e Inventario de Accesos</title>
+    <link rel="stylesheet" href="./assets/css/site.css">
+    <link rel="stylesheet" href="./assets/css/admin.css">
+</head>
+<body>
+
+    <div id="toast" class="toast-notificacion">
+        <span id="toast-icono">✔️</span>
+        <span id="toast-mensaje">Mensaje de notificación</span>
+    </div>
+
+    <header>
+        <div class="header-main">
+            <a onclick="cambiarVista('inicio')" class="logo">
+                <span>Sentinelacces</span>
+            </a>
+            
+            <div class="search-bar">
+                <input type="text" id="input-buscador" placeholder="Buscar soluciones, módulos o repuestos..." oninput="manejarBusquedaInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); ejecutarBusquedaGlobal();}">
+                <button type="button" onclick="ejecutarBusquedaGlobal()">Buscar</button>
+                <div id="sugerencias-container" class="sugerencias-box"></div>
+            </div>
+
+            <div class="header-actions">
+                <div id="header-auth-actions" class="header-auth-group">
+                    <button onclick="abrirModalLogin()">🔑 Iniciar Sesión</button>
+                    <a onclick="cambiarVista('carrito')" class="cart-btn-header">🛒 Carrito (<span id="cart-count-header">0</span>)</a>
+                </div>
+
+                <!-- Menú de Tres Puntos (Sustituye la antigua barra superior) -->
+                <div class="menu-puntos-wrapper">
+                    <button type="button" id="btn-menu-puntos" class="btn-tres-puntos" onclick="toggleMenuPuntos(event)" aria-label="Menú de navegación" title="Más opciones">
+                        <span class="puntos-icono">⋮</span>
+                    </button>
+                    
+                    <div id="dropdown-tres-puntos" class="dropdown-puntos-menu">
+                        <div class="puntos-seccion-header">SERVICIOS</div>
+                        <a onclick="cerrarMenuPuntos(); cambiarVista('mantenimiento');">🛠️ Mantenimiento Preventivo</a>
+                        <a onclick="cerrarMenuPuntos(); cambiarVista('mantenimiento');">📑 Planes de Mantenimiento</a>
+                        <a onclick="cerrarMenuPuntos(); cambiarVista('soporte');">🚨 Soporte Técnico de Emergencia</a>
+
+                        <div class="puntos-seccion-header">REPUESTOS Y KITS</div>
+                        <a onclick="cerrarMenuPuntos(); mostrarTodos(); cambiarVista('repuestos');">🔍 Ver Todos los Componentes</a>
+                        <a onclick="cerrarMenuPuntos(); seleccionarKit('basico'); cambiarVista('repuestos');">📦 Kit Básico</a>
+                        <a onclick="cerrarMenuPuntos(); seleccionarKit('intermedio'); cambiarVista('repuestos');">📦 Kit Intermedio</a>
+                        <a onclick="cerrarMenuPuntos(); seleccionarKit('avanzado'); cambiarVista('repuestos');">📦 Kit Avanzado</a>
+
+                        <div class="puntos-seccion-header">PLATAFORMA</div>
+                        <a onclick="cerrarMenuPuntos(); irASeccionBeneficios();">🛡️ Garantía y Respaldo Total</a>
+                        <a onclick="cerrarMenuPuntos(); irASeccionAreas();">🏢 Áreas de Aplicación</a>
+                        <a onclick="cerrarMenuPuntos(); cambiarVista('perfil');" id="puntos-link-perfil" style="display: none;">👤 Mi Perfil</a>
+                        <a onclick="cerrarMenuPuntos(); cambiarVista('admin');" id="puntos-admin-link" style="display: none; color: #2b6cb0; font-weight: bold;">⚙️ Panel Admin</a>
+                        <a href="#contacto" onclick="cerrarMenuPuntos();">📞 Contacto</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- BANNER DE CARRITO PENDIENTE -->
+        <div id="banner-carrito-pendiente" class="banner-abandono">
+            <button class="banner-abandono-close" onclick="cerrarBannerAbandono()" title="Cerrar notificación">✕</button>
+            <div>
+                <h4 style="margin: 0 0 0.3rem 0; font-size: 1.1rem;"> ¡No olvides tus productos en el carro!</h4>
+                <p style="margin: 0; font-size: 0.9rem; color: #cbd5e0;">Tienes artículos pendientes hace un mes. Te regalamos un <strong>5% de descuento</strong> automático.</p>
+            </div>
+            <div id="banner-prod-info" class="banner-abandono-prod"></div>
+            <button onclick="cambiarVista('carrito')" style="background: #3182ce; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: bold; cursor: pointer;">Ver Carrito con Dcto ➔</button>
+        </div>
+
+        <div id="vista-inicio" class="vista activa">
+            <section class="inicio-section">
+                <h1 class="inicio-titulo-principal">Soluciones Confiables para Accesos Críticos</h1>
+                <p class="inicio-subtitulo">
+                    Optimizamos la gestión de acceso en instalaciones educativas y corporativas mediante mantenimiento preventivo y un sistema de alertas de contingencia automatizado.
+                </p>
+
+                <div class="problematica-hero">
+                    <div style="text-align: center;">
+                        <img src="kit_basico.png" alt="Kit Básico Sentinelacces" class="problematica-img">
+                        <div style="margin-top: 0.8rem; font-weight: bold; color: #1a365d; font-size: 0.95rem;">Kit Básico Ensamblado</div>
+                    </div>
+                    <div class="problematica-texto">
+                        <h3>Kit Básico de Respaldo y Control de Acceso</h3>
+                        <p><strong>Sistema integrado de alta disponibilidad para laboratorios y recintos críticos.</strong></p>
+                        <p>Diseñado para mitigar interrupciones operativas ante fallos en los sensores biométricos principales. Combina autenticación digital, teclado matricial de respaldo y visualización en tiempo real, garantizando la continuidad operacional sin depender exclusivamente de una sola tecnología de acceso.</p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN COMPRA ASEGURADA, INSTALACIÓN, ASESORÍA Y SOPORTE POSTVENTA -->
+                <section id="seccion-beneficios-compra" class="seccion-beneficios-compra">
+                    <div class="beneficios-header">
+                        <span class="beneficios-tag-sup">Compromiso y Respaldo Total Sentinelacces</span>
+                        <h2 class="beneficios-titulo">Todo Producto Incluye Cobertura y Servicio Integral</h2>
+                        <p class="beneficios-subtitulo">
+                            Al adquirir cualquier producto o kit Sentinelacces no solo compras hardware: tu inversión está <strong>100% asegurada</strong> con respaldo de fábrica, <strong>instalación técnica certificada</strong>, <strong>asesoría especializada</strong> en dimensionamiento y <strong>soporte postventa continuo</strong> con repuestos garantizados.
+                        </p>
+                    </div>
+
+                    <div class="grid-beneficios-compra">
+                        <!-- Pilar 1: Asegurado -->
+                        <div class="card-beneficio">
+                            <div class="card-beneficio-icono-box icono-asegurado">🛡️</div>
+                            <h3>1. Compra 100% Asegurada</h3>
+                            <div class="card-beneficio-resumen">Garantía oficial directa y reposición exprés contra fallos.</div>
+                            <ul class="card-beneficio-detalles">
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Garantía de 12 Meses:</strong> Cobertura total de fábrica en placas ESP32, sensores biométricos ópticos, teclados matriciales y fuentes de poder.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>RMA Exprés con Reemplazo Inmediato:</strong> Ante cualquier anomalía técnica crítica, enviamos un componente de reemplazo prioritario para evitar recintos vulnerables o cerrados.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Control de Calidad en Banco de Pruebas:</strong> Cada unidad es sometida a pruebas electrónicas de estrés, consumo y respuesta lógica antes del embalaje antiestático.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Seguro de Transporte Nacional:</strong> Despacho protegido de origen a destino con seguro contra extravío, daños por manipulación o golpes.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Pilar 2: Instalación -->
+                        <div class="card-beneficio">
+                            <div class="card-beneficio-icono-box icono-instalacion">🛠️</div>
+                            <h3>2. Instalación Certificada</h3>
+                            <div class="card-beneficio-resumen">Montaje profesional, calibración milimétrica y validación en terreno.</div>
+                            <ul class="card-beneficio-detalles">
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Técnicos Especialistas Homologados:</strong> Instalación rigurosa de cerraduras electromagnéticas, pernos de seguridad y canalizaciones eléctricas normalizadas.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Calibración Óptica y Capacitiva:</strong> Ajuste milimétrico de la sensibilidad y velocidad de lectura de huella según iluminación, polvo y flujo del recinto.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Simulación de Contingencias:</strong> Ensayos in situ de corte de suministro eléctrico y apertura de emergencia para asegurar continuidad total.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Acta Técnica de Entrega:</strong> Configuración respaldada en firmware y protocolo de recepción firmado con la conformidad del cliente.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Pilar 3: Asesoría Técnica -->
+                        <div class="card-beneficio">
+                            <div class="card-beneficio-icono-box icono-asesoria">👨‍💻</div>
+                            <h3>3. Asesoría Técnica Especializada</h3>
+                            <div class="card-beneficio-resumen">Dimensionamiento previo, compatibilidad e inducción operativa.</div>
+                            <ul class="card-beneficio-detalles">
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Levantamiento de Accesos:</strong> Evaluación técnica de puertas (vidrio templado, madera, metal, cortafuegos) y cálculo del flujo de usuarios por hora.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Selección Óptima de Kits:</strong> Orientación experta entre Kit Básico, Intermedio o Avanzado según la criticidad y nivel de contingencia requerido.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Capacitación al Personal de TI y Seguridad:</strong> Inducción práctica en enrolamiento de huellas, creación de códigos de respaldo y gestión de alertas.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Diagramas y Planos de Conexión:</strong> Planos esquemáticos claros para facilitar integración con alarmas de incendio o sistemas de CCTV.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Pilar 4: Soporte Postventa -->
+                        <div class="card-beneficio">
+                            <div class="card-beneficio-icono-box icono-postventa">🚨</div>
+                            <h3>4. Soporte Postventa Continuo</h3>
+                            <div class="card-beneficio-resumen">Mesa de ayuda directa, repuestos originales y planes preventivos.</div>
+                            <ul class="card-beneficio-detalles">
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Mesa de Ayuda Multicanal Directa:</strong> Atención prioritaria vía WhatsApp técnico, tickets online y llamadas de contingencia con ingenieros.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Stock Garantizado de Repuestos:</strong> Disponibilidad asegurada de todos los componentes oficiales Sentinelacces por al menos 5 años.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Tarifas Preferenciales de Mantenimiento:</strong> Descuentos exclusivos en contratos preventivos semestrales con limpieza ultrasónica de sensores.</div>
+                                </li>
+                                <li>
+                                    <span class="card-beneficio-bullet">✓</span>
+                                    <div><strong>Actualizaciones de Firmware:</strong> Asesoría continua para mejoras de seguridad, nuevas funciones IoT y optimización de algoritmos.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN ÁREAS DE APLICACIÓN COMPLEMENTADA -->
+                <div id="seccion-areas" class="seccion-areas-wrapper" style="margin-top: 3.5rem;">
+                    <div style="text-align: center; max-width: 800px; margin: 0 auto 2rem auto;">
+                        <span class="beneficios-tag-sup" style="background: #ebf8ff; color: #2b6cb0; border-color: #bee3f8;">Cobertura Sectorial</span>
+                        <h2 class="seccion-sectores-titulo" style="margin-bottom: 0.6rem;">Áreas de Aplicación y Soluciones a Medida</h2>
+                        <p style="color: #4a5568; font-size: 0.98rem; line-height: 1.6; margin: 0;">
+                            Nuestros sistemas de control de acceso y contingencia están diseñados para operar con máxima confiabilidad en infraestructuras donde una falla de ingreso representa retrasos operativos, riesgos biológicos o pérdidas económicas.
+                        </p>
+                    </div>
+                    
+                    <div class="grid-sectores">
+                        <div class="card-sector">
+                            <div class="card-sector-header">
+                                <span class="card-sector-icono">🏫</span>
+                                <h4>Instituciones Educativas y Universidades</h4>
+                            </div>
+                            <div class="card-sector-sub">Salas de cómputo, laboratorios de docencia y áreas docentes.</div>
+                            <div class="card-sector-bloque">
+                                <strong>Desafíos Comunes:</strong>
+                                <ul>
+                                    <li>Pérdida recurrente de llaves maestras físicas y duplicados no autorizados.</li>
+                                    <li>Accesos indebidos de alumnos a salas de servidores o áreas de profesores.</li>
+                                    <li>Pérdida de hasta 15 minutos de clases por fallas o bloqueos de cerraduras.</li>
+                                    <li>Ausencia de comunicación en tiempo real entre docentes y soporte de campus.</li>
+                                </ul>
+                            </div>
+                            <div class="card-sector-solucion">
+                                <strong>Solución Sentinelacces:</strong>
+                                <p>Autenticación biométrica con teclado matricial de respaldo para que la clase inicie siempre a tiempo, más registro automático de apertura por bloque lectivo.</p>
+                            </div>
+                        </div>
+
+                        <div class="card-sector">
+                            <div class="card-sector-header">
+                                <span class="card-sector-icono">🔬</span>
+                                <h4>Laboratorios de Investigación y Ensayos</h4>
+                            </div>
+                            <div class="card-sector-sub">Salas limpias, bioterios, laboratorios químicos y biotecnología.</div>
+                            <div class="card-sector-bloque">
+                                <strong>Desafíos Comunes:</strong>
+                                <ul>
+                                    <li>Riesgo crítico de contaminación cruzada o alteración de reactivos de alto costo.</li>
+                                    <li>Necesidad imperativa de restringir el ingreso exclusivamente a investigadores certificados.</li>
+                                    <li>Bloqueos en esclusas o puertas electromagnéticas por descalibración del sensor.</li>
+                                    <li>Falta de auditoría estricta de tiempo de permanencia e incidentes de rechazo.</li>
+                                </ul>
+                            </div>
+                            <div class="card-sector-solucion">
+                                <strong>Solución Sentinelacces:</strong>
+                                <p>Lectores ópticos de alta velocidad con display LCD informativo, validación de huella en menos de 0.8s y registro de eventos para auditorías de acreditación.</p>
+                            </div>
+                        </div>
+
+                        <div class="card-sector">
+                            <div class="card-sector-header">
+                                <span class="card-sector-icono">🏥</span>
+                                <h4>Centros Médicos, Clínicas y Hospitales</h4>
+                            </div>
+                            <div class="card-sector-sub">Pabellones quirúrgicos, farmacias centrales, bancos de sangre y esterilización.</div>
+                            <div class="card-sector-bloque">
+                                <strong>Desafíos Comunes:</strong>
+                                <ul>
+                                    <li>Flujo ininterrumpido 24/7 donde cada segundo cuenta ante una urgencia vital.</li>
+                                    <li>Control estricto de acceso a psicotrópicos y fármacos de prescripción controlada.</li>
+                                    <li>Manos de personal con guantes o desinfectante que pueden ralentizar la lectura biométrica.</li>
+                                    <li>Necesidad de desbloqueo inmediato y seguro ante alertas de evacuación médica.</li>
+                                </ul>
+                            </div>
+                            <div class="card-sector-solucion">
+                                <strong>Solución Sentinelacces:</strong>
+                                <p>Doble vía de validación biométrica + código rápido, integración con pulsadores de emergencia sin contacto y respaldo por batería ante cortes eléctricos.</p>
+                            </div>
+                        </div>
+
+                        <div class="card-sector">
+                            <div class="card-sector-header">
+                                <span class="card-sector-icono">🗄️</span>
+                                <h4>Data Centers e Infraestructura de TI</h4>
+                            </div>
+                            <div class="card-sector-sub">Salas de servidores, cuartos de comunicaciones racks y salas UPS.</div>
+                            <div class="card-sector-bloque">
+                                <strong>Desafíos Comunes:</strong>
+                                <ul>
+                                    <li>Exigencia de máxima seguridad perimetral para protección de datos confidenciales.</li>
+                                    <li>Sensores ópticos expuestos a ambientes fríos de climatización que alteran la sensibilidad.</li>
+                                    <li>Falta de alertas instantáneas ante intentos repetidos de acceso denegado.</li>
+                                    <li>Riesgo de corte del suministro de red local imposibilitando la apertura remota.</li>
+                                </ul>
+                            </div>
+                            <div class="card-sector-solucion">
+                                <strong>Solución Sentinelacces:</strong>
+                                <p>Controlador autónomo ESP32 con almacenamiento local de 1.000 huellas, alertas en tiempo real vía Telegram/WiFi y registro inalterable de aperturas.</p>
+                            </div>
+                        </div>
+
+                        <div class="card-sector">
+                            <div class="card-sector-header">
+                                <span class="card-sector-icono">🏭</span>
+                                <h4>Plantas Industriales, Bodegas y Logística</h4>
+                            </div>
+                            <div class="card-sector-sub">Centros de distribución, pañoles de herramientas y áreas de maquinaria pesada.</div>
+                            <div class="card-sector-bloque">
+                                <strong>Desafíos Comunes:</strong>
+                                <ul>
+                                    <li>Ambientes exigentes con presencia de polvo ambiental, grasa y vibración mecánica constante.</li>
+                                    <li>Alto tráfico de operadores y personal de turno rotativo en horarios nocturnos.</li>
+                                    <li>Cerraduras expuestas a golpes de puertas de alto tonelaje o portones pesados.</li>
+                                    <li>Falta de mantenimiento en relés de conmutación provocando puertas trabadas.</li>
+                                </ul>
+                            </div>
+                            <div class="card-sector-solucion">
+                                <strong>Solución Sentinelacces:</strong>
+                                <p>Chapas electromagnéticas industriales de hasta 280 kg (600 lbs), carcasas reforzadas y planes de mantenimiento preventivo semestral programado.</p>
+                            </div>
+                        </div>
+
+                        <div class="card-sector">
+                            <div class="card-sector-header">
+                                <span class="card-sector-icono">🏢</span>
+                                <h4>Edificios Corporativos y Oficinas Centrales</h4>
+                            </div>
+                            <div class="card-sector-sub">Gerencias, salas de archivo contable, áreas de recursos humanos y salas de reuniones.</div>
+                            <div class="card-sector-bloque">
+                                <strong>Desafíos Comunes:</strong>
+                                <ul>
+                                    <li>Rotación periódica de colaboradores y demora en la anulación de accesos antiguos.</li>
+                                    <li>Visitantes y contratistas que requieren autorizaciones temporales o acotadas.</li>
+                                    <li>Tiempos prolongados de respuesta ante fallas repentinas de cerraduras.</li>
+                                    <li>Necesidad de una estética pulcra y moderna que combine con mamparas de vidrio.</li>
+                                </ul>
+                            </div>
+                            <div class="card-sector-solucion">
+                                <strong>Solución Sentinelacces:</strong>
+                                <p>Diseño estético y profesional para puertas vidriadas o madera, enrolamiento rápido de nuevos usuarios y soporte técnico con SLA garantizado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="vista-mantenimiento" class="vista">
+            <section class="mantenimiento-banner">
+                <h2>Mantenimiento Preventivo de Accesos Biométricos</h2>
+                <p>Es un conjunto de actividades programadas para optimizar el funcionamiento de los lectores de huella y chapas eléctricas en laboratorios, minimizando fallas de lectura y asegurando que las alertas de contingencia funcionen de forma inmediata.</p>
+                
+                <h3 style="color: white; font-size: 1.2rem; margin-top: 1.8rem; margin-bottom: 0.5rem;">Importancia del Servicio</h3>
+                <div class="importancia-grid">
+                    <div class="card-importancia">
+                        <h4>🗣️ Previene Fallas de Lectura</h4>
+                        <p>Mantiene los sensores biométricos limpios y calibrados para evitar rechazos de huella.</p>
+                    </div>
+                    <div class="card-importancia">
+                        <h4>⚡ Optimiza el Tiempo</h4>
+                        <p>Permite que el docente ingrese al laboratorio sin perder minutos valiosos de clase.</p>
+                    </div>
+                    <div class="card-importancia">
+                        <h4>📊 Trazabilidad y Datos</h4>
+                        <p>Registro de eventos y reportes periódicos sobre intentos fallidos y alertas enviadas.</p>
+                    </div>
+                    <div class="card-importancia">
+                        <h4>💰 Reduce Costos de Reparación</h4>
+                        <p>Evita el desgaste prematuro de chapas electromagnéticas y controladores.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="planes-section">
+                <h3>Planes de Mantenimiento Preventivo</h3>
+                <p style="color: #718096; margin-bottom: 1.5rem;">Selecciona la cobertura que mejor se adapte a los laboratorios de tu facultad o campus:</p>
+
+                <div class="planes-tabla-wrapper">
+                    <table class="tabla-planes">
+                        <thead>
+                            <tr>
+                                <th style="background:#1a365d; text-align:left;">Detalle del Servicio</th>
+                                <th class="plan-basico">BÁSICO</th>
+                                <th class="plan-avanzado">AVANZADO</th>
+                                <th class="plan-integral">INTEGRAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="seccion-header">
+                                <td colspan="4">VALORES Y REVISIONES</td>
+                            </tr>
+                            <tr>
+                                <td class="col-servicio">Mantenimiento Preventivo Periódico</td>
+                                <td>Semestral</td>
+                                <td>Trimestral</td>
+                                <td>Mensual</td>
+                            </tr>
+                            <tr>
+                                <td class="col-servicio">Soporte Presencial por Emergencia</td>
+                                <td>No incluido</td>
+                                <td>Sí</td>
+                                <td>Sí (Prioritario)</td>
+                            </tr>
+                            <tr>
+                                <td class="col-servicio">Descuento en Repuestos y Sensores</td>
+                                <td>5%</td>
+                                <td>10%</td>
+                                <td>15%</td>
+                            </tr>
+
+                            <tr class="seccion-header">
+                                <td colspan="4">TIEMPOS DE RESPUESTA DENTRO DEL CAMPUS</td>
+                            </tr>
+                            <tr>
+                                <td class="col-servicio">Atención de Alertas (Correo/Telegram)</td>
+                                <td>30 minutos</td>
+                                <td>15 minutos</td>
+                                <td>Inmediata (&lt; 5 min)</td>
+                            </tr>
+                            <tr>
+                                <td class="col-servicio">Visita Técnica Presencial</td>
+                                <td>24 horas hábiles</td>
+                                <td>12 horas hábiles</td>
+                                <td>4 horas hábiles</td>
+                            </tr>
+
+                            <tr class="seccion-header">
+                                <td colspan="4">SERVICIOS ADICIONALES Y CONTINGENCIA</td>
+                            </tr>
+                            <tr>
+                                <td class="col-servicio">Módulo de Notificación por Telegram / Email</td>
+                                <td>Sí</td>
+                                <td>Sí</td>
+                                <td>Sí</td>
+                            </tr>
+                            <tr>
+                                <td class="col-servicio">Equipo de Respaldo (Backup en Caliente)</td>
+                                <td>No</td>
+                                <td>Sujeto a disponibilidad</td>
+                                <td>Sí, incluido</td>
+                            </tr>
+                            <tr>
+                                <td class="col-servicio">Reporte Mensual de Intento de Accesos</td>
+                                <td>No</td>
+                                <td>No</td>
+                                <td>Sí</td>
+                            </tr>
+                            <tr>
+                                <td class="col-servicio">Capacitación a Técnicos de Laboratorio</td>
+                                <td>1 al año</td>
+                                <td>1 al año</td>
+                                <td>Semestral</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <div id="vista-soporte" class="vista">
+            <div style="background: white; padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                <h2 style="color: #1a365d; margin-top: 0;">🛠️ Soporte Técnico de Emergencia y Diagnóstico</h2>
+                <p style="color: #4a5568; line-height: 1.6;">
+                    ¿Tienes una falla urgente en un lector biométrico, chapa electromagnética o controlador ESP32? 
+                    Nuestro equipo técnico especializado realiza asistencia presencial o remota para restablecer el acceso a tus laboratorios de inmediato.
+                </p>
+
+                <div class="importancia-grid" style="margin-bottom: 2rem;">
+                    <div class="card-importancia">
+                        <h4>⏱️ Respuesta Rápida</h4>
+                        <p>Atención prioritaria para laboratorios y recintos universitarios con bloqueo de puertas.</p>
+                    </div>
+                    <div class="card-importancia">
+                        <h4>🔍 Diagnóstico Preciso</h4>
+                        <p>Evaluación de cableado, sensores ópticos, firmware y conexiones de red.</p>
+                    </div>
+                    <div class="card-importancia">
+                        <h4>🔄 Repuestos en Terreno</h4>
+                        <p>Contamos con stock de respaldo inmediato (sensores FPM10A, teclados, módulos de relé).</p>
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; max-width: 600px; margin: 0 auto;">
+                    <h3 style="color: #1a365d; margin-top:0;">Solicitar Visita Técnica / Asistencia</h3>
+                    <div class="checkout-form-group">
+                        <label>Nombre del Contacto / Institución *</label>
+                        <input type="text" id="soporte-nombre" placeholder="Ej: Facultad de Ingeniería - Campus Central">
+                    </div>
+                    <div class="checkout-form-group">
+                        <label>Correo Electrónico *</label>
+                        <input type="email" id="soporte-email" placeholder="correo@institucion.cl">
+                    </div>
+                    <div class="checkout-form-group">
+                        <label>Teléfono de Contacto *</label>
+                        <input type="text" id="soporte-telefono" placeholder="+56 9 9999 9999">
+                    </div>
+                    <div class="checkout-form-group">
+                        <label>Descripción del Problema o Falla *</label>
+                        <textarea id="soporte-detalle" rows="4" placeholder="Ej: La chapa electromagnética de la sala 3 no responde al sensor de huella..."></textarea>
+                    </div>
+                    <button class="btn-modal-pagar" style="width: 100%; background-color: #3182ce;" onclick="enviarSolicitudSoporte()">Enviar Solicitud de Soporte 🚀</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="vista-admin" class="vista">
+            <section class="admin-shell" aria-label="Panel administrativo">
+                <!-- Barra superior minimalista: solo botón Hamburguesa y sección activa -->
+                <div class="admin-top-bar">
+                    <button type="button" id="admin-menu-toggle" class="admin-hamburger-btn" aria-label="Abrir menú de administración" aria-controls="admin-drawer" aria-expanded="false" title="Abrir menú de administración">
+                        <span class="admin-hamburger-icon" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                        <span class="admin-hamburger-text">Menú</span>
+                    </button>
+                    <div class="admin-top-view-info">
+                        <span class="admin-top-dot"></span>
+                        <span id="admin-current-section-text">Resumen Ejecutivo</span>
+                    </div>
+                </div>
+
+                <!-- Overlay del Menú Hamburguesa -->
+                <div id="admin-drawer-overlay" class="admin-drawer-overlay" aria-hidden="true"></div>
+
+                <!-- Menú Lateral / Drawer Administrativo (Estilo Meta: Blanco sólido y limpio) -->
+                <aside id="admin-drawer" class="admin-drawer" aria-label="Menú de administración" aria-hidden="true">
+                    <div class="admin-drawer-header">
+                        <div class="admin-drawer-brand">
+                            <span class="admin-drawer-brand-icon">🛡️</span>
+                            <div>
+                                <h3 class="admin-drawer-brand-title">Sentinelacces</h3>
+                                <p class="admin-drawer-brand-sub">Panel de Administración</p>
+                            </div>
+                        </div>
+                        <button type="button" id="admin-drawer-close" class="admin-drawer-close-btn" aria-label="Cerrar menú" title="Cerrar menú">✕</button>
+                    </div>
+
+                    <div class="admin-drawer-body">
+                        <!-- Módulos de Gestión -->
+                        <div class="admin-drawer-section">
+                            <span class="admin-drawer-section-title">Navegación</span>
+                            <nav class="admin-drawer-nav" aria-label="Secciones del panel">
+                                <button class="admin-drawer-tab is-active" type="button" data-admin-tab="resumen">
+                                    <span class="admin-drawer-tab-icon">📊</span>
+                                    <span class="admin-drawer-tab-info">
+                                        <span class="admin-drawer-tab-name">Resumen Ejecutivo</span>
+                                        <span class="admin-drawer-tab-sub">KPIs globales y alertas críticas</span>
+                                    </span>
+                                    <span class="admin-drawer-pill danger" id="admin-drawer-badge-criticos" title="Productos con stock bajo" style="display: none;">0</span>
+                                </button>
+                                <button class="admin-drawer-tab" type="button" data-admin-tab="inventario">
+                                    <span class="admin-drawer-tab-icon">📦</span>
+                                    <span class="admin-drawer-tab-info">
+                                        <span class="admin-drawer-tab-name">Control de Inventario</span>
+                                        <span class="admin-drawer-tab-sub">Catálogo, stock y reposición</span>
+                                    </span>
+                                    <span class="admin-drawer-pill" id="admin-drawer-badge-total" title="Total de referencias">0</span>
+                                </button>
+                                <button class="admin-drawer-tab" type="button" data-admin-tab="actividad">
+                                    <span class="admin-drawer-tab-icon">📈</span>
+                                    <span class="admin-drawer-tab-info">
+                                        <span class="admin-drawer-tab-name">Indicadores de Actividad</span>
+                                        <span class="admin-drawer-tab-sub">Interés y carritos guardados</span>
+                                    </span>
+                                </button>
+                            </nav>
+                        </div>
+
+                        <!-- Acciones Principales (cumple la función de los botones de acción) -->
+                        <div class="admin-drawer-section">
+                            <span class="admin-drawer-section-title">Acciones</span>
+                            <div class="admin-drawer-nav">
+                                <button class="admin-drawer-action" type="button" id="admin-refresh" title="Recargar datos de Firestore">
+                                    <span class="admin-drawer-tab-icon">🔄</span>
+                                    <span class="admin-drawer-tab-info">
+                                        <span class="admin-drawer-tab-name">Actualizar datos</span>
+                                        <span class="admin-drawer-tab-sub">Sincronizar inventario desde Firestore</span>
+                                    </span>
+                                </button>
+                                <button class="admin-drawer-action" type="button" onclick="cambiarVista('repuestos')">
+                                    <span class="admin-drawer-tab-icon">🛒</span>
+                                    <span class="admin-drawer-tab-info">
+                                        <span class="admin-drawer-tab-name">Catálogo de Repuestos</span>
+                                        <span class="admin-drawer-tab-sub">Ver la tienda pública</span>
+                                    </span>
+                                </button>
+                                <button class="admin-drawer-action" type="button" onclick="cambiarVista('inicio')">
+                                    <span class="admin-drawer-tab-icon">🏠</span>
+                                    <span class="admin-drawer-tab-info">
+                                        <span class="admin-drawer-tab-name">Inicio del Sitio</span>
+                                        <span class="admin-drawer-tab-sub">Página principal pública</span>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Sesión y Cuenta -->
+                        <div class="admin-drawer-section">
+                            <span class="admin-drawer-section-title">Cuenta</span>
+                            <div class="admin-drawer-nav">
+                                <button class="admin-drawer-action admin-drawer-danger" type="button" onclick="cerrarSesion()">
+                                    <span class="admin-drawer-tab-icon">🚪</span>
+                                    <span class="admin-drawer-tab-info">
+                                        <span class="admin-drawer-tab-name">Cerrar Sesión</span>
+                                        <span class="admin-drawer-tab-sub">Salir del modo administrador</span>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-drawer-footer">
+                        <div class="admin-drawer-user-status">
+                            <span class="admin-status-dot"></span>
+                            <span>Sesión activa · Administrador</span>
+                        </div>
+                        <small class="admin-drawer-version">Sentinelacces Operaciones</small>
+                    </div>
+                </aside>
+
+                <section class="admin-panel" data-admin-panel="resumen">
+                    <div class="admin-metrics">
+                        <article class="admin-metric"><span>Productos registrados</span><strong id="admin-kpi-productos">0</strong><small>Referencias del catálogo</small></article>
+                        <article class="admin-metric"><span>Unidades en stock</span><strong id="admin-kpi-stock">0</strong><small>Disponibilidad actual</small></article>
+                        <article class="admin-metric"><span>Stock bajo (≤ 5)</span><strong id="admin-kpi-criticos">0</strong><small>Incluye artículos agotados</small></article>
+                        <article class="admin-metric"><span>Ventas registradas</span><strong id="admin-kpi-ventas">0</strong><small>Campo ventasMes en Firestore</small></article>
+                    </div>
+                    <div class="admin-summary-grid">
+                        <article class="admin-surface">
+                            <h2>Prioridades de reposición</h2><p>Productos con cinco o menos unidades disponibles.</p>
+                            <div id="admin-alertas" class="admin-alert-list"></div>
+                        </article>
+                        <article class="admin-surface">
+                            <h2>Interés de clientes</h2><p>Productos ordenados por interacciones registradas.</p>
+                            <div id="admin-ranking" class="admin-ranking"></div>
+                        </article>
+                    </div>
+                </section>
+                <section class="admin-panel" data-admin-panel="inventario" hidden>
+                    <div class="admin-surface">
+                        <div class="admin-section-heading"><div><h2>Control de inventario</h2><p>Busca, filtra y ajusta unidades de productos.</p></div><span id="admin-total-visible" class="admin-count"></span></div>
+                        <div class="admin-toolbar">
+                            <label class="admin-field"><span>Buscar producto o SKU</span><input id="admin-search" type="search" placeholder="Ej. ESP32 o sensor"></label>
+                            <label class="admin-field"><span>Estado del stock</span><select id="admin-stock-filter"><option value="todos">Todos</option><option value="bajo">Bajo (≤ 5)</option><option value="agotado">Agotados</option><option value="disponible">Disponibles</option></select></label>
+                            <label class="admin-field"><span>Ordenar por</span><select id="admin-sort"><option value="nombre">Nombre (A–Z)</option><option value="stock">Menor stock</option><option value="ventas">Más ventas</option><option value="interes">Mayor interés</option></select></label>
+                        </div>
+                        <div class="admin-table-scroll-hint" aria-hidden="true">
+                            <span>👈 Desliza horizontalmente la tabla para ver todos los datos 👉</span>
+                        </div>
+                        <div class="admin-table-scroll"><table class="admin-table"><thead><tr><th>SKU</th><th>Producto</th><th>Stock</th><th>Interés</th><th>Ventas mes</th><th>Carritos</th><th>Reposición</th></tr></thead><tbody id="admin-tabla-body"></tbody></table></div>
+                        <div class="admin-table-footer"><span id="admin-pagination-info"></span><div><button class="admin-btn" id="admin-prev" type="button">Anterior</button><button class="admin-btn" id="admin-next" type="button">Siguiente</button></div></div>
+                    </div>
+                </section>
+                <section class="admin-panel" data-admin-panel="actividad" hidden>
+                    <div class="admin-surface"><h2>Indicadores de actividad</h2><p>Lectura agregada de los campos registrados actualmente en los productos.</p>
+                        <div class="admin-metrics admin-metrics-secondary">
+                            <article class="admin-metric"><span>Interacciones / interés</span><strong id="admin-kpi-interes">0</strong><small>Suma de deseabilidad</small></article>
+                            <article class="admin-metric"><span>Carritos registrados</span><strong id="admin-kpi-abandonos">0</strong><small>Suma de abandonosCarro</small></article>
+                        </div>
+                        <p class="admin-notice">Los indicadores provienen de campos acumulados en productos; no constituyen analítica de eventos, historial de ventas ni seguimiento real de abandono. No se muestran ingresos porque el archivo original no almacena pedidos pagados verificables.</p>
+                    </div>
+                </section>
+            </section>
+        </div>
+
+        <div id="vista-repuestos" class="vista">
+            <div class="repuestos-layout">
+                <aside class="filtros-sidebar">
+                    <h3>⚙️ Filtros</h3>
+                    <div class="grupo-filtro">
+                        <h4>Categorías / Kits</h4>
+                        <label><input type="checkbox" class="filtro-chk" value="basico" onchange="aplicarFiltros()"> Kit Básico</label>
+                        <label><input type="checkbox" class="filtro-chk" value="intermedio" onchange="aplicarFiltros()"> Kit Intermedio</label>
+                        <label><input type="checkbox" class="filtro-chk" value="avanzado" onchange="aplicarFiltros()"> Kit Avanzado</label>
+                    </div>
+
+                    <div class="grupo-filtro">
+                        <h4>Componente</h4>
+                        <label><input type="checkbox" class="filtro-chk" value="microcontroladores" onchange="aplicarFiltros()"> Microcontroladores</label>
+                        <label><input type="checkbox" class="filtro-chk" value="biometria" onchange="aplicarFiltros()"> Biometría y Lectores</label>
+                        <label><input type="checkbox" class="filtro-chk" value="teclados" onchange="aplicarFiltros()"> Teclados y Pantallas</label>
+                        <label><input type="checkbox" class="filtro-chk" value="red" onchange="aplicarFiltros()"> Módulos de Red</label>
+                    </div>
+                </aside>
+
+                <div class="catalogo-productos">
+                    <div class="catalogo-header">
+                        <div>
+                            <h2 style="margin: 0; color: #1a365d;">Repuestos y Módulos de Acceso</h2>
+                            <span id="contador-productos" style="font-size: 0.85rem; color: #718096;">Sincronizado con Firestore</span>
+                        </div>
+                    </div>
+                    <div class="grid-productos" id="grid-productos-dinamicos"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="vista-detalle" class="vista">
+            <button class="btn-volver-catalogo" onclick="cambiarVista('repuestos')">← Volver al catálogo</button>
+            <div class="detalle-container">
+                <div class="detalle-img-box">
+                    <img id="det-img" src="" alt="Imagen Producto">
+                    
+                    <!-- Contenedor dinámico para la descripción del equipo / componente -->
+                    <div class="caja-descripcion-equipo" id="det-caja-descripcion">
+                        <h5 id="det-desc-titulo">📋 Descripción del Producto</h5>
+                        <p id="det-desc-texto" style="margin: 0;">Cargando descripción...</p>
+                    </div>
+                </div>
+                
+                <div class="detalle-info-box">
+                    <div id="det-modelo" class="modelo-tag" style="font-size: 0.85rem; margin-bottom: 0.4rem;">MODELO</div>
+                    <h2 id="det-titulo">Nombre del Componente</h2>
+                    <div id="det-precio" class="detalle-precio">$0</div>
+                    <div class="detalle-neto">Precio neto</div>
+                    <div id="det-stock" class="detalle-stock">Stock disponible: --</div>
+
+                    <div class="compra-acciones">
+                        <div class="selector-cantidad">
+                            <button onclick="cambiarCantidad(-1)">-</button>
+                            <span id="cantidad-input">1</span>
+                            <button onclick="cambiarCantidad(1)">+</button>
+                        </div>
+                        <button class="btn-agregar-carro" id="btn-add-det" onclick="ejecutarAgregarAlCarro()">Agregar al carro 🛒</button>
+                    </div>
+
+                    <div class="caja-despacho">
+                        <h4>📦 Despachamos a todo Chile</h4>
+                        <p>Selecciona la comuna para visualizar el costo de envío del producto:</p>
+                        <select>
+                            <option>Seleccione su comuna</option>
+                            <option>Santiago</option>
+                            <option>Providencia</option>
+                            <option>Las Condes</option>
+                            <option>Valparaíso</option>
+                            <option>Concepción</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor Ficha Técnica (solo para componentes individuales, kits intactos) -->
+            <div id="det-ficha-tecnica-container" class="ficha-tecnica-box" style="display: none;">
+                <div class="ficha-tecnica-header">
+                    <div class="ficha-tit-grupo">
+                        <h3>📑 Ficha Técnica del Componente</h3>
+                        <span class="ficha-badge">Especificación Industrial Sentinelacces</span>
+                    </div>
+                    <span class="ficha-garantia-tag">🛡️ 12 Meses Garantía</span>
+                </div>
+                <p class="ficha-intro">Parámetros técnicos, voltajes de operación y protocolos certificados para integración en recintos críticos:</p>
+                <div class="ficha-tabla-wrapper">
+                    <table class="tabla-ficha-tecnica">
+                        <thead>
+                            <tr>
+                                <th>Parámetro Técnico</th>
+                                <th>Especificación Certificada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="det-tabla-ficha-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA DE PERFIL DE USUARIO -->
+        <div id="vista-perfil" class="vista">
+            <div class="perfil-container">
+                <div class="perfil-card">
+                    <div class="perfil-header-banner">
+                        <div class="perfil-avatar-circle" id="perfil-avatar">👤</div>
+                        <div class="perfil-titulos-box">
+                            <div class="perfil-nombre-row">
+                                <h2 id="perfil-nombre-tit">Mi Perfil</h2>
+                                <span class="perfil-rol-tag cliente" id="perfil-rol-tag">Cliente</span>
+                            </div>
+                            <p id="perfil-email-sub" class="perfil-email-text">correo@usuario.cl</p>
+                        </div>
+                    </div>
+
+                    <form id="form-perfil-usuario" onsubmit="guardarPerfilUsuario(event)">
+                        <div class="perfil-section">
+                            <h4>📋 Información Personal</h4>
+                            <div class="perfil-form-grid">
+                                <div class="perfil-input-group">
+                                    <label for="perfil-nombre">Nombre Completo *</label>
+                                    <input type="text" id="perfil-nombre" required placeholder="Tu nombre completo">
+                                </div>
+                                <div class="perfil-input-group">
+                                    <label for="perfil-email">Correo Electrónico (Asociado a tu cuenta)</label>
+                                    <input type="email" id="perfil-email" readonly placeholder="tu-correo@empresa.cl">
+                                </div>
+                                <div class="perfil-input-group">
+                                    <label for="perfil-telefono">Teléfono / WhatsApp *</label>
+                                    <input type="tel" id="perfil-telefono" placeholder="+56 9 1234 5678">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="perfil-section">
+                            <h4>📍 Datos de Despacho y Facturación</h4>
+                            <div class="perfil-form-grid">
+                                <div class="perfil-input-group full-width">
+                                    <label for="perfil-direccion">Dirección (Calle, Número, Depto/Oficina)</label>
+                                    <input type="text" id="perfil-direccion" placeholder="Ej: Av. Libertador Bernardo O'Higgins 1234, Of. 402">
+                                </div>
+                                <div class="perfil-input-group">
+                                    <label for="perfil-region">Región</label>
+                                    <input type="text" id="perfil-region" placeholder="Ej: Región Metropolitana">
+                                </div>
+                                <div class="perfil-input-group">
+                                    <label for="perfil-comuna">Comuna</label>
+                                    <input type="text" id="perfil-comuna" placeholder="Ej: Santiago Centro">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="perfil-meta-footer">
+                            <div class="perfil-meta-item">
+                                <span class="perfil-meta-label">Fecha de Registro:</span>
+                                <span id="perfil-fecha-registro" class="perfil-meta-val">-</span>
+                            </div>
+                            <div class="perfil-meta-item">
+                                <span class="perfil-meta-label">Estado de Cuenta:</span>
+                                <span class="perfil-meta-val estado-activo">● Activo en Sentinelacces</span>
+                            </div>
+                        </div>
+
+                        <div class="perfil-botones-acciones">
+                            <button type="submit" class="btn-guardar-perfil">💾 Guardar Cambios</button>
+                            <button type="button" class="btn-volver-perfil" onclick="cambiarVista('inicio')">🏠 Volver al Inicio</button>
+                            <button type="button" class="btn-cerrar-perfil" onclick="cerrarSesion()">🚪 Cerrar Sesión</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="vista-carrito" class="vista">
+            <h2 style="color: #1a365d;">Carrito (<span id="carrito-cant-tit">0</span> producto)</h2>
+            <div class="carrito-page">
+                <div class="carrito-items-box">
+                    <div id="contenedor-items-carrito"></div>
+                    <button class="btn-vaciar" onclick="vaciarCarritoConAbandono()">Vaciar Carrito</button>
+                </div>
+
+                <div class="carrito-resumen-box">
+                    <div class="resumen-linea">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">$0</span>
+                    </div>
+                    <div class="resumen-linea" style="color: #2b6cb0; font-weight: bold;">
+                        <span>Descuento Carrito (5%):</span>
+                        <span id="cart-dcto">-$0</span>
+                    </div>
+                    <div class="resumen-linea">
+                        <span>I.V.A (19%):</span>
+                        <span id="cart-iva">$0</span>
+                    </div>
+                    <div class="resumen-linea total">
+                        <span>Total con Dcto:</span>
+                        <span id="cart-total">$0</span>
+                    </div>
+                    <button class="btn-continuar-compra" onclick="cambiarVista('checkout')">Continuar compra</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="vista-checkout" class="vista">
+            <div class="checkout-layout">
+                <div class="checkout-main-form">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <a onclick="cambiarVista('inicio')" class="logo" style="color: #1a365d; font-size: 1.6rem;">Sentinelacces</a>
+                        <div class="checkout-steps">
+                            <span class="activo">👥 Mis datos</span> ➔ <span>🚚 Entrega</span> ➔ <span>💳 Pagar</span>
+                        </div>
+                    </div>
+
+                    <h2 style="color: #1a365d; margin-top: 0;">Mis datos</h2>
+                    
+                    <div class="checkout-form-group">
+                        <label>Nombre y apellido(s) *</label>
+                        <input type="text" id="chk-nombre" placeholder="Nombre y apellido">
+                    </div>
+
+                    <div class="checkout-form-group row-2-col">
+                        <div>
+                            <label>Email *</label>
+                            <input type="email" id="chk-email" placeholder="correo@ejemplo.com">
+                        </div>
+                        <div>
+                            <label>Teléfono *</label>
+                            <input type="text" id="chk-telefono" placeholder="+56 9 9999 9999">
+                        </div>
+                    </div>
+
+                    <div class="checkout-form-group" id="grupo-password">
+                        <label>Contraseña para cuenta nueva *</label>
+                        <input type="password" id="chk-password" placeholder="Mínimo 6 caracteres">
+                    </div>
+
+                    <div class="checkout-form-group" id="grupo-toggle-cuenta">
+                        <label>Crear cuenta con los datos ingresados</label>
+                        <div class="toggle-cuenta-box">
+                            <div class="toggle-option selected" id="opt-si" onclick="seleccionarCuenta(true)">Sí ☑️</div>
+                            <div class="toggle-option" id="opt-no" onclick="seleccionarCuenta(false)">No ☒</div>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #1a365d; margin-top: 1.8rem;">Dirección de facturación</h3>
+
+                    <div class="checkout-form-group">
+                        <label>Calle y número *</label>
+                        <input type="text" id="chk-calle" placeholder="Dirección de facturación">
+                    </div>
+
+                    <div class="checkout-form-group">
+                        <label>Oficina / Departamento / otros (opcional)</label>
+                        <input type="text" id="chk-depto" placeholder="Detalles de dirección">
+                    </div>
+
+                    <div class="checkout-form-group row-2-col">
+                        <div>
+                            <label>Región: *</label>
+                            <select id="chk-region">
+                                <option value="">Selecciona la región</option>
+                                <option value="Región Metropolitana">Región Metropolitana</option>
+                                <option value="Valparaíso">Valparaíso</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Comuna: *</label>
+                            <select id="chk-comuna">
+                                <option value="">Selecciona la comuna</option>
+                                <option value="Santiago">Santiago</option>
+                                <option value="Providencia">Providencia</option>
+                                <option value="Pudahuel">Pudahuel</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn-ir-entrega" id="btn-submit-checkout" onclick="procesarRegistroFirebase()">Finalizar Compra 🚀</button>
+                    <button class="btn-volver-catalogo" style="margin-top: 1.5rem;" onclick="cambiarVista('repuestos')">‹ Volver a la tienda</button>
+                </div>
+
+                <div class="checkout-summary-sidebar">
+                    <h3 style="margin-top: 0; color: #1a365d;">Transacción Segura 🔒</h3>
+                    <div id="checkout-prod-list" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1rem;"></div>
+
+                    <div class="resumen-linea">
+                        <span>Subtotal:</span>
+                        <span id="chk-subtotal">$0</span>
+                    </div>
+                    <div class="resumen-linea" style="color: #2b6cb0; font-weight: bold;">
+                        <span>Dcto Carrito (5%):</span>
+                        <span id="chk-dcto">-$0</span>
+                    </div>
+                    <div class="resumen-linea">
+                        <span>I.V.A:</span>
+                        <span id="chk-iva">$0</span>
+                    </div>
+                    <div class="resumen-linea total">
+                        <span>Total con Dcto:</span>
+                        <span id="chk-total">$0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL DE INICIO Y REGISTRO DE SESIÓN -->
+    <div id="modal-login" class="modal-overlay">
+        <div class="modal-box" style="max-width: 420px;">
+            <button class="modal-close-btn" onclick="cerrarModalLogin()">×</button>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+                <button id="tab-login-btn" onclick="cambiarTabAuth('login')" style="background:none; border:none; font-size:1.1rem; font-weight:bold; color:#1a365d; cursor:pointer; flex:1; padding-bottom:5px; border-bottom: 3px solid #3182ce;">Iniciar Sesión</button>
+                <button id="tab-registro-btn" onclick="cambiarTabAuth('registro')" style="background:none; border:none; font-size:1.1rem; font-weight:bold; color:#a0aec0; cursor:pointer; flex:1; padding-bottom:5px;">Crear Cuenta</button>
+            </div>
+
+            <div id="form-auth-login">
+                <div class="checkout-form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="login-email" placeholder="correo@ejemplo.com">
+                </div>
+                <div class="checkout-form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="login-password" placeholder="Tu contraseña">
+                </div>
+                <div style="text-align: right; margin-bottom: 1rem;">
+                    <a onclick="recuperarContraseña()" style="font-size: 0.85rem; color: #3182ce; cursor: pointer; text-decoration: underline;">¿Olvidaste tu contraseña?</a>
+                </div>
+                <button class="btn-modal-pagar" style="width: 100%; margin-top: 0.5rem;" onclick="ejecutarLogin()">Iniciar Sesión ➔</button>
+            </div>
+
+            <div id="form-auth-registro" style="display: none;">
+                <div class="checkout-form-group">
+                    <label>Nombre y Apellido *</label>
+                    <input type="text" id="reg-nombre" placeholder="Tu nombre completo">
+                </div>
+                <div class="checkout-form-group">
+                    <label>Correo Electrónico *</label>
+                    <input type="email" id="reg-email" placeholder="correo@ejemplo.com">
+                </div>
+                <div class="checkout-form-group">
+                    <label>Teléfono *</label>
+                    <input type="text" id="reg-telefono" placeholder="+56 9 9999 9999">
+                </div>
+                <div class="checkout-form-group">
+                    <label>Contraseña (Mínimo 6 caracteres) *</label>
+                    <input type="password" id="reg-password" placeholder="Crea tu contraseña">
+                </div>
+                <button class="btn-modal-pagar" style="width: 100%; margin-top: 1rem; background-color: #2f855a;" onclick="ejecutarRegistroModal()">Registrarse y Entrar 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PRODUCTO AGREGADO -->
+    <div id="modal-agregado" class="modal-overlay">
+        <div class="modal-box" style="text-align: center;">
+            <button class="modal-close-btn" onclick="cerrarModal()">×</button>
+            <div class="check-icon-circle">✓</div>
+            <h3 style="margin: 0; color: #1a365d; font-size: 1.4rem;">Agregaste al carrito</h3>
+            <div class="modal-prod-detail">
+                <img id="modal-img" src="" alt="Producto">
+                <div>
+                    <div id="modal-sku" style="font-size: 0.78rem; color: #718096;">SKU: ---</div>
+                    <h4 id="modal-titulo" style="margin: 0.2rem 0; color: #1a365d;">Nombre Producto</h4>
+                    <div id="modal-precio" style="font-weight: bold; color: #2b6cb0; font-size: 1.1rem;">$0</div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modal-pagar" onclick="cerrarModal(); cambiarVista('checkout');">Ir a pagar ➔</button>
+                <button class="btn-modal-ver" onclick="cerrarModal(); cambiarVista('carrito');">Ver carrito 🛒</button>
+            </div>
+        </div>
+    </div>
+
+    <footer id="contacto">
+        <p><strong>Sentinelacces</strong> | Proyecto de Emprendimiento Universitario</p>
+        <p>Contacto: contacto@sentinelacces.com</p>
+    </footer>
+
+    <script type="module" src="./assets/js/app.js"></script>
+
+</body>
+</html>
